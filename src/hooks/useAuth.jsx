@@ -1107,7 +1107,7 @@ const useAuth = () => {
 
   useEffect(() => {
     if (!socketRef.current) {
-      socketRef.current = io(import.meta.env.VITE_BASE_URL);
+      socketRef.current = io("https://officebackend-15b3.onrender.com");
 
       socketRef.current.on("connect", () => {
         console.log(
