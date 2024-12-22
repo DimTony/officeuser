@@ -625,8 +625,9 @@ const useAuth = () => {
             <HStack px="42px" alignItems="flex-start">
               <Image src="/icons/text.svg" alt="secure" w="24px" h="24px" />
               <Text fontSize="0.9rem">
-                We texted your phone +XXX XXXXXXXXX09. Please enter the code to
-                sign in.
+                We texted your phone{" "}
+                <span style={{ textTransform: "uppercase" }}>{phone}</span>.
+                Please enter the code to sign in.
               </Text>
             </HStack>
             <Box w="100%" px="44px">
